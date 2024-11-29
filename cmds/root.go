@@ -19,8 +19,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/spf13/cobra"
 	"log"
+
+	"github.com/spf13/cobra"
 )
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -36,32 +37,33 @@ func Execute() {
 var RootCmd = &cobra.Command{
 	Use:   "esdump",
 	Short: "es import export",
-	Long: `es import export `,
+	Long:  `es import export `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Usage()
-		},
-		PersistentPreRun:func(cmd *cobra.Command, args []string){
-			log.SetOutput(os.Stderr)
-			log.Println("binary version:",Version,"build Time:",BuildTime)
-			log.Println("execute ",cmd.Use)
-			timeStart=time.Now()
-		},
-		PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
-			log.Printf("%s time spend %s",cmd.Use,time.Now().Sub(timeStart).String())
-			return nil
-		},
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Usage()
+	},
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		log.SetOutput(os.Stderr)
+		log.Println("binary version:", Version, "build Time:", BuildTime)
+		log.Println("execute ", cmd.Use)
+		timeStart = time.Now()
+	},
+	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+		log.Printf("%s time spend %s", cmd.Use, time.Since(timeStart).String())
+		return nil
+	},
 }
 var timeStart time.Time
 
 var EsUrl string
 var IndexName string
+
 func init() {
 	log.SetOutput(os.Stderr)
 	//log.Println("cobra root init")
-	 RootCmd.PersistentFlags().StringVar(&EsUrl,"es","http://localhost:9200","es url")
-	RootCmd.PersistentFlags().StringVar(&IndexName,"index","my_index","index name")
+	RootCmd.PersistentFlags().StringVar(&EsUrl, "es", "http://localhost:9200", "es url")
+	RootCmd.PersistentFlags().StringVar(&IndexName, "index", "my_index", "index name")
 	RootCmd.MarkFlagRequired("es")
 	RootCmd.MarkFlagRequired("index")
 	RootCmd.AddCommand(versionCmd)
@@ -74,4 +76,3 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
-
