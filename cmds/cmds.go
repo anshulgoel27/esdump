@@ -76,7 +76,7 @@ func ExportData(outputFile, esUrl, indexName, matchBody string) (err error) {
 		ss = ss.Query(rawQuery)
 		log.Println("export match:", matchBody)
 	}
-	pager := ss.Size(10000) //.Query(elastic.MatchAllQuery{})
+	pager := ss.Size(100) //.Query(elastic.MatchAllQuery{})
 	pcounter := 0
 	count := 0
 	dataChan := make(chan interface{}, 300)
